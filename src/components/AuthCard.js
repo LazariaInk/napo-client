@@ -5,7 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 
 export function AuthCard() {
   const { colors } = useTheme();
-  const { loading, loginWithEmail, registerWithEmail } = useAuth();
+  const { loading, loginWithEmail, loginWithGoogle, registerWithEmail } = useAuth();
   const [mode, setMode] = useState('login');
   const [email, setEmail] = useState('test@napo.local');
   const [password, setPassword] = useState('password123');
@@ -20,6 +20,15 @@ export function AuthCard() {
       } else {
         await registerWithEmail(email, password, displayName);
       }
+    } catch (exception) {
+      setError(exception.message);
+    }
+  }
+
+  async function submitGoogle() {
+    setError(null);
+    try {
+      await loginWithGoogle();
     } catch (exception) {
       setError(exception.message);
     }
@@ -87,6 +96,21 @@ export function AuthCard() {
           </Text>
         )}
       </Pressable>
+
+      <View style={styles.dividerRow}>
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        <Text style={[styles.dividerText, { color: colors.muted }]}>sau</Text>
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+      </View>
+
+      <Pressable
+        onPress={submitGoogle}
+        disabled={loading}
+        style={[styles.googleButton, { borderColor: colors.border, backgroundColor: colors.surface }, loading && styles.disabled]}
+      >
+        <Text style={[styles.googleMark, { color: colors.text }]}>G</Text>
+        <Text style={[styles.googleButtonText, { color: colors.text }]}>Continue with Google</Text>
+      </Pressable>
     </View>
   );
 }
@@ -147,6 +171,39 @@ const styles = StyleSheet.create({
   },
   primaryButtonText: {
     fontSize: 16,
+    fontWeight: '800',
+  },
+  dividerRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+    paddingVertical: 2,
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+  },
+  dividerText: {
+    fontSize: 12,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+  },
+  googleButton: {
+    alignItems: 'center',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'center',
+    minHeight: 48,
+    paddingHorizontal: 14,
+  },
+  googleMark: {
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  googleButtonText: {
+    fontSize: 15,
     fontWeight: '800',
   },
   error: {

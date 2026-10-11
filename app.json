@@ -32,7 +32,8 @@
     },
     "plugins": [
       "expo-router",
-      "./plugins/withCleartextTraffic"
+      "./plugins/withCleartextTraffic",
+      "@react-native-google-signin/google-signin"
     ]
   }
 }

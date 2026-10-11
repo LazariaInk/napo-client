@@ -47,6 +47,13 @@ export function register(email, password, displayName) {
   });
 }
 
+export function loginWithGoogle(idToken) {
+  return request('/api/auth/google', {
+    method: 'POST',
+    body: { idToken },
+  });
+}
+
 export function getCurrentUser(accessToken) {
   return request('/api/auth/me', { accessToken });
 }

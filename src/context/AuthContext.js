@@ -1,5 +1,6 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 import * as api from '../api/client';
+import { getGoogleAuthErrorMessage, getGoogleIdToken } from '../services/googleAuthService';
 
 const AuthContext = createContext(null);
 
@@ -32,6 +33,20 @@ export function AuthProvider({ children }) {
           setUser(response);
           setAccessToken(response.accessToken);
           return response;
+        } finally {
+          setLoading(false);
+        }
+      },
+      async loginWithGoogle() {
+        setLoading(true);
+        try {
+          const idToken = await getGoogleIdToken();
+          const response = await api.loginWithGoogle(idToken);
+          setUser(response);
+          setAccessToken(response.accessToken);
+          return response;
+        } catch (exception) {
+          throw new Error(getGoogleAuthErrorMessage(exception));
         } finally {
           setLoading(false);
         }
